@@ -1,7 +1,26 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 # Create your views here.
 from .models import Artikel
+
+
+class ArtikelCreateView(CreateView):
+
+
+class ArtikelPerKategori():
+    model = Artikel
+
+    def get_latest_artikel_each_kategori(self):
+        kategori_list = self.model.objects.values_list(
+            'kategori', flat=True).distinct()
+        queryset = []
+
+        for kategori in kategori_list:
+            artikel = self.model.objects.filter(
+                kategori=kategori).latest('published')
+            queryset.append(artikel)
+
+        return queryset
 
 
 class ArtikelKategoriListView(ListView):
